@@ -84,7 +84,7 @@ class Client(models.Model):
 class ClientMeasure(models.Model):
     client = models.ForeignKey(
         Client, 
-        related_name='measures', 
+        related_name='clientmeasure', 
         on_delete=models.CASCADE)
     measure = models.ForeignKey(
         Measure, 

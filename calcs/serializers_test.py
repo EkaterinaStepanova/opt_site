@@ -26,14 +26,20 @@ serializer_context = {
     'request': Request(request),
 }
 
+# exec(open('serializers_test.py').read())
+
+Client.objects.all().delete()
+Measure.objects.all().delete()
+ClientMeasure.objects.all().delete()
+print(ClientMeasure.objects.all())
 
 
 gamedatetime = timezone.make_aware(datetime.now(), timezone.get_current_timezone())
 
-cl = Client(created = gamedatetime, name= 'John Smit1')
+cl = Client(created = gamedatetime, name= 'John Smith')
 cl.save()
 
-meas = Measure(date = gamedatetime, name='Grishagi1', bottom_border = 0.1, upper_border  = 2.0, r = 3.4, epsilon = 0.001)
+meas = Measure(date = gamedatetime, name='Grishagin', bottom_border = 0.1, upper_border  = 2.0, r = 3.4, epsilon = 0.001)
 meas.save()
 
 cl_meas = ClientMeasure(client=cl, measure=meas)
@@ -47,7 +53,6 @@ print(cl_meas.measure.pk)
 print(cl_meas.measure.name)
 print(cl_meas.measure.function_minimum)
 
-
 measure_serializer = MeasureSerializer(instance=meas, context=serializer_context)
 print(measure_serializer.data)
 
@@ -58,6 +63,8 @@ print(client_measure_serializer.data)
 renderer = JSONRenderer()
 rendered = renderer.render(client_measure_serializer.data)
 print(rendered)
+
+print(ClientMeasure.objects.all())
 
 cl_meas.delete()
 meas.delete()

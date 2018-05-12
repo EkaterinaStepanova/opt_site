@@ -24,10 +24,10 @@ urlpatterns = [
         views.UserDetail.as_view(),
         name=views.UserDetail.name),
 
-    url(r'^client-measures/$', 
+    url(r'^clientmeasure/$', 
         views.ClientMeasureList.as_view(),
         name=views.ClientMeasureList.name),
-    url(r'^client-measures/(?P<pk>[0-9]+)/$', 
+    url(r'^clientmeasure/(?P<pk>[0-9]+)/$', 
         views.ClientMeasureDetail.as_view(),
         name=views.ClientMeasureDetail.name),
 

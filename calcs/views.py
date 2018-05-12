@@ -124,7 +124,7 @@ class ClientMeasureListFilter(FilterSet):
 class ClientMeasureList(generics.ListCreateAPIView):
     queryset = ClientMeasure.objects.all()
     serializer_class = ClientMeasureSerializer
-    name = 'client-measure-list'
+    name = 'clientmeasure-list'
     filter_class = ClientMeasureListFilter
     ordering_fields = (
         'date',
@@ -142,7 +142,7 @@ class ClientMeasureList(generics.ListCreateAPIView):
 class ClientMeasureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ClientMeasure.objects.all()
     serializer_class = ClientMeasureSerializer
-    name = 'client-measure-detail'
+    name = 'clientmeasure-detail'
 
 
 class ApiRoot(generics.GenericAPIView):
@@ -151,7 +151,7 @@ class ApiRoot(generics.GenericAPIView):
         return Response({
             'clients': reverse(ClientList.name, request=request),
             'measures': reverse(MeasureList.name, request=request),
-            'client-measures': reverse(ClientMeasureList.name, request=request),
+            'clientmeasure': reverse(ClientMeasureList.name, request=request),
             #'users': reverse(UserList.name, request=request),
             })
 
