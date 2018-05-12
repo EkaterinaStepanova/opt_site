@@ -33,22 +33,16 @@ class Measure(models.Model):
     function_minimum  = models.FloatField(default=0)
     arg_minimum       = models.FloatField(default=0)
 
-    '''client = models.ForeignKey(
-        Client, 
-        related_name='measures', 
-        on_delete=models.CASCADE)
-
     owner = models.ForeignKey(
         'auth.User',
         related_name = 'measures',
         on_delete = models.CASCADE
-        )'''
+        )
 
     # когда в последний раз измеряли
     date = models.DateTimeField()
     # название эксперимента. 
-    # !TODO unique? нет, надо переделать
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     # использовали ли вообще шаблон
     used = models.BooleanField(default=False)
 
@@ -67,7 +61,7 @@ class Client(models.Model):
         (STUDENT, 'Student'),
     )
     created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=50, blank=False, default='', unique=True)
+    name = models.CharField(max_length=50, blank=False, default='')
     post = models.CharField(
         max_length=2,
         choices=POST_CHOICES,
@@ -96,52 +90,3 @@ class ClientMeasure(models.Model):
 
     def __str__(self):
         return self.measure.name
-
-'''
-class MeasureInput(models.Model):
-    bottom_border = models.FloatField()
-    upper_border  = models.FloatField()
-    r             = models.FloatField()
-    epsilon       = models.FloatField()
-    #functions     = models.CharField()
-
-
-class MeasureOutput(models.Model):
-    iterations_number = models.IntegerField()
-    function_minimum  = models.FloatField()
-    arg_minimum       = models.FloatField()
-
-
-class Measure(models.Model):
-
-    input = models.ForeignKey(
-        MeasureInput, 
-        on_delete=models.CASCADE)
-
-    output = models.ForeignKey(
-        MeasureOutput, 
-        on_delete=models.CASCADE)
-
-    client = models.ForeignKey(
-        Client, 
-        related_name='measures', 
-        on_delete=models.CASCADE)
-
-    owner = models.ForeignKey(
-        'auth.User',
-        related_name = 'measures',
-        on_delete = models.CASCADE
-        )
-
-    # когда в последний раз измеряли
-    date = models.DateTimeField()
-    # название эксперимента.
-    name = models.CharField(max_length=200, unique=True)
-    # использовали ли вообще шаблон
-    used = models.BooleanField(default=False)
-
-    class Meta:
-        ordering = ('date',)
-
-    def __str__(self):
-        return self.name'''

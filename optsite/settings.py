@@ -25,7 +25,7 @@ SECRET_KEY = 'zy$$l+!3^sa+v^drr)=w1)713diih2wxsp7se5eeo-(28h8c90'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'testserver',]
+ALLOWED_HOSTS = [ 'testserver', '127.0.0.1']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'calcs.apps.CalcsConfig'
+    'django_filters',
+    'calcs.apps.CalcsConfig',
 ]
 
 MIDDLEWARE = [

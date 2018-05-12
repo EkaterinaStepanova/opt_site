@@ -50,7 +50,7 @@ class MeasureList(generics.ListCreateAPIView):
         'name', 
         'date', 
         'used', 
-        #'owner',
+        'owner',
         #'client'
         )
     search_fields = (

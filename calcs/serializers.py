@@ -36,7 +36,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class MeasureSerializer(serializers.HyperlinkedModelSerializer):
     # We just want to display the owner username (read-only)
-    #owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     #client = serializers.SlugRelatedField(queryset=Client.objects.all(), slug_field='name')
 
@@ -47,7 +47,7 @@ class MeasureSerializer(serializers.HyperlinkedModelSerializer):
                 'url',
                 'name',
                 'date', 
-                #'owner',
+                'owner',
                 #'input', #?
                 #'output', #?
                 'used',
@@ -62,9 +62,9 @@ class ClientSerializer(serializers.HyperlinkedModelSerializer):
     #measures = serializers.SlugRelatedField(queryset=Measure.objects.all(), slug_field='name')
     post = serializers.ChoiceField(
         choices=Client.POST_CHOICES)
-    post_description = serializers.CharField(
-        source='get_post_display', 
-        read_only=True)
+    #post_description = serializers.CharField(
+    #    source='get_post_display', 
+    #    read_only=True)
 
     class Meta:
         model = Client
@@ -72,7 +72,7 @@ class ClientSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'name',
             'post',
-            'post_description',
+            #'post_description',
             'measures',
             )  
 
