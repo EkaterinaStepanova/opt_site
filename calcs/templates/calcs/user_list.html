@@ -1,0 +1,9 @@
+<div>
+    <h1><a href="/">Title</a></h1>
+</div>
+
+{% for user in users %}
+    <div>
+        <h3><a href="/user/{{ user.pk }}">{{ user.username }}</a></h3>
+    </div>
+{% endfor %}

@@ -21,6 +21,10 @@ from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter
 from calcs.permissions import IsOwnerOrReadOnly
 from django_filters.rest_framework import FilterSet 
 
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from django.http import Http404
+
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
@@ -41,18 +45,38 @@ class UserList(generics.ListAPIView):
         'username',
         )
 
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/user_list.html'  
+
+    def get(self, request):
+        queryset = User.objects.all()
+        return Response({'users': queryset})
+
+
 
 class UserDetail(generics.RetrieveAPIView):
 #class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     name = 'user-detail'
-
+     
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         permissions.IsAdminUser,
         )
 
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/user_detail.html'
+
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        user = self.get_object(pk)
+        return Response({'user': user})
 
 class MeasureListFilter(FilterSet):
     from_measure_date = DateTimeFilter(
@@ -96,6 +120,13 @@ class MeasureList(generics.ListCreateAPIView):
         'date',
         )
 
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/measure_list.html'  
+
+    def get(self, request):
+        queryset = Measure.objects.all()
+        return Response({'measures': queryset})
+
     def perform_create(self, serializer):
         #serializer.save(owner=self.request.user)
         serializer.save()
@@ -105,12 +136,25 @@ class MeasureDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-detail'
-    template_name = 'calcs/measure_detail.html'
+
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
         permissions.IsAdminUser,
         IsOwnerOrReadOnly,     
         )
+
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/measure_detail.html'
+
+    def get_object(self, pk):
+        try:
+            return Measure.objects.get(pk=pk)
+        except Measure.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        measure = self.get_object(pk)
+        return Response({'measure': measure})
 
 
 class ApiRoot(generics.GenericAPIView):

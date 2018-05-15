@@ -1,11 +1,9 @@
 <div>
     <h1><a href="/">Title</a></h1>
 </div>
-
-{% for post in posts %}
+    
+{% for measure in measures %}
     <div>
-        <p>published: {{ post.published_date }}</p>
-        <h1><a href="">{{ post.title }}</a></h1>
-        <p>{{ post.text|linebreaksbr }}</p>
+        <h3><a href="/measure/{{ measure.pk }}">{{ measure.name }}</a></h3>
     </div>
 {% endfor %}
