@@ -1,22 +1,5 @@
 from django.db import models
-
-# Create your models here.
-'''
-class MeasureInput(models.model):
-    dimension     = IntegerField()
-    bottom_border = CharField()
-    upper_border  = CharField()
-    r             = CharField()
-    epsilon       = CharField()
-
-
-class MeasureOutput(models.model):
-    iterations_number = IntegerField()
-    function_minimum  = FloatField()
-    arg_minimum       = CharField()
-    # execution time?'''
-
-# one dimension f(x)
+from django.contrib.auth.models import User
 
 
 class Measure(models.Model):
@@ -34,59 +17,22 @@ class Measure(models.Model):
     arg_minimum       = models.FloatField(default=0)
 
     owner = models.ForeignKey(
-        'auth.User',
-        related_name = 'measures',
+        User,
+        related_name = 'measure',
         on_delete = models.CASCADE
         )
 
     # когда в последний раз измеряли
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
     # название эксперимента. 
     name = models.CharField(max_length=200)
-    # использовали ли вообще шаблон
-    used = models.BooleanField(default=False)
+    # нашелся ли минимум
+    result_exist = models.BooleanField(default=False)
+    # добавить причину, если не нашелся
+    exist_reason = models.CharField(max_length=200, default='')
 
     class Meta:
         ordering = ('date',)
 
     def __str__(self):
         return self.name
-
-
-class Client(models.Model):
-    TEACHER = 'Teacher'
-    STUDENT = 'Student'
-    POST_CHOICES = (
-        (TEACHER, 'Teacher'),
-        (STUDENT, 'Student'),
-    )
-    created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=50, blank=False, default='')
-    post = models.CharField(
-        max_length=2,
-        choices=POST_CHOICES,
-        default=STUDENT,
-    )
-
-    class Meta:
-        ordering = ('name',)
-
-    def __str__(self):
-        return self.name
-
-
-class ClientMeasure(models.Model):
-    client = models.ForeignKey(
-        Client, 
-        related_name='clientmeasure', 
-        on_delete=models.CASCADE)
-    measure = models.ForeignKey(
-        Measure, 
-        on_delete=models.CASCADE)
-
-    class Meta:
-        # Order by score descending
-        ordering = ('measure__date',)
-
-    def __str__(self):
-        return self.measure.name

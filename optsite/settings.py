@@ -135,13 +135,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         ),
-    #'DEFAULT_THROTTLE_CLASSES': (
-    #    'rest_framework.throttling.AnonRateThrottle',
-    #    'rest_framework.throttling.UserRateThrottle',
-    #),
-    #'DEFAULT_THROTTLE_RATES': {
-    #    'anon': '5/hour',
-    #    'user': '20/hour',
-    #    'measures': '30/hour',
-    #}
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '30/hour',
+        'user': '100/hour',
+        'measures': '100/hour',
+    }
 }
