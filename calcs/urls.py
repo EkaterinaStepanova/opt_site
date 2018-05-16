@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^measure/(?P<pk>[0-9]+)/$', 
         views.MeasureDetail.as_view(),
         name=views.MeasureDetail.name),
+    url(r'^measure/create/$', 
+        views.MeasureCreate.as_view(),
+        name=views.MeasureCreate.name),
 
     # url(r'^sign-up/(?P<pk>[0-9]+)/$',
     #      views.UserManager.as_view(action='sign-up'),

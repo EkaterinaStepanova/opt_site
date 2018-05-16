@@ -19,6 +19,7 @@ from django_filters.rest_framework import FilterSet
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 #reg form
 from django.views.generic.edit import CreateView
@@ -75,12 +76,11 @@ class MeasureList(generics.ListCreateAPIView):
         queryset = Measure.objects.all()
         return Response({'measures': queryset})
 
-    def perform_create(self, serializer):
-        #serializer.save(owner=self.request.user)
-        serializer.save()
+    #def perform_create(self, serializer):
+    #    serializer.save()
 
 
-class MeasureDetail(generics.RetrieveUpdateDestroyAPIView):
+class MeasureDetail(generics.RetrieveAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-detail'
@@ -96,7 +96,41 @@ class MeasureDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, pk, format=None):
         measure = self.get_object(pk)
-        return Response({'measure': measure})
+        serializer = MeasureSerializer(measure)
+        template_name = 'calcs/measure_detail.html'
+        return Response({ 'serializer': serializer, 'measure': measure })
+
+
+
+
+from django.shortcuts import redirect 
+class MeasureCreate(generics.ListCreateAPIView):
+    queryset = Measure.objects.all()
+    serializer_class = MeasureSerializer
+    name = 'measure-create'
+
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/measure_create.html'
+
+    def post(self, request, pk):
+        #measure = get_object_or_404(Measure, pk=pk)
+        serializer = MeasureSerializer(data=request.data, context={'request': request})
+
+        if not serializer.is_valid():
+            return Response({ 'serializer': serializer, 'measure': measure })
+        serializer.save()       
+        return redirect('/measure/', request=request)
+
+
+    # class UserCreate(CreateView):
+#     model = User
+#     fields = ['username', password]
+
+#     def form_valid(self, form):
+#         form.instance.created_by = self.request.user
+#         return super(AuthorCreate, self).form_valid(form)
+
+
 
 
 class ApiRoot(generics.GenericAPIView):
