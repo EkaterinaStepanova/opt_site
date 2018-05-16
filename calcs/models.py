@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class Measure(models.Model):
@@ -15,12 +14,6 @@ class Measure(models.Model):
     iterations_number = models.IntegerField(default=0)
     function_minimum  = models.FloatField(default=0)
     arg_minimum       = models.FloatField(default=0)
-
-    owner = models.ForeignKey(
-        User,
-        related_name = 'measure',
-        on_delete = models.CASCADE
-        )
 
     # когда в последний раз измеряли
     date = models.DateTimeField(auto_now_add=True)
