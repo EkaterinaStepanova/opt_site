@@ -1,4 +1,5 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
+from django.urls import path
 from calcs import views
 
 
@@ -16,6 +17,13 @@ urlpatterns = [
     url(r'^user/(?P<pk>[0-9]+)/$',
         views.UserDetail.as_view(),
         name=views.UserDetail.name),
+    # url(r'^sign-up/(?P<pk>[0-9]+)/$',
+    #      views.UserManager.as_view(action='sign-up'),
+    #      name=views.UserManager.name),
+    # path('user/', include('django.contrib.auth.urls')),
+    #url(r'^user/', include('django.contrib.auth.urls')),
+
+    #url(r'^signup/$', views.signup, name='signup'),
 
 
     url(r'^$',

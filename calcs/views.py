@@ -25,6 +25,23 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from django.http import Http404
 
+#reg form
+from django.views.generic.edit import CreateView
+
+# class UserCreate(CreateView):
+#     model = User
+#     fields = ['username', password]
+
+#     def form_valid(self, form):
+#         form.instance.created_by = self.request.user
+#         return super(AuthorCreate, self).form_valid(form)
+
+
+class UserManager(generics.RetrieveAPIView):
+
+    def sign_up(self, request, action):
+        self.template_name = 'calcs/user_list.html'  
+
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()

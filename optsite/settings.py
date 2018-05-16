@@ -25,6 +25,7 @@ SECRET_KEY = 'zy$$l+!3^sa+v^drr)=w1)713diih2wxsp7se5eeo-(28h8c90'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = [ 'testserver', '127.0.0.1']
 
 
@@ -121,6 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
