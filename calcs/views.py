@@ -38,8 +38,6 @@ class MeasureListFilter(FilterSet):
     to_measure_date = DateTimeFilter(
         name='measure_date', lookup_expr='lte')
 
-    owner_username = AllValuesFilter(name='owner__username')
-
     measure_name = AllValuesFilter(name='measure__name')
 
     class Meta:
@@ -47,7 +45,6 @@ class MeasureListFilter(FilterSet):
         fields = (
             'from_measure_date',
             'to_measure_date',
-            'owner_username',
             'measure_name',
             )
 
