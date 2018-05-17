@@ -24,6 +24,9 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.edit import CreateView
 from calcs.forms import MeasureForm
 
+#minimization
+from calcs.minimization import minimize
+
 # class UserCreate(CreateView):
 #     model = User
 #     fields = ['username', password]
@@ -60,6 +63,7 @@ class MeasureList(generics.ListCreateAPIView):
         'name', 
         'date', 
         'result_exist', 
+        'method',
         )
     search_fields = (
         '^name',
@@ -84,7 +88,6 @@ class MeasureDetail(generics.RetrieveAPIView):
 
     renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer)
     template_name = 'calcs/measure_detail.html'
-
 
     def get_object(self, pk):
         try:
@@ -114,6 +117,11 @@ class MeasureCreate(generics.ListCreateAPIView):
             measure.save()
             serializer = MeasureSerializer(measure, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):
+                #celery!!!
+                minimize_result = minimize(measure)
+                minimize_result.save()
+                print(measure.get_method())
+
                 return redirect('/measure/', request=request)
 
 
