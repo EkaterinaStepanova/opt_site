@@ -1,4 +1,5 @@
-<div>
+{% extends 'calcs/base.html' %}
+<!-- <div>
     <h1><a href="/">Title</a></h1>
 </div>
 
@@ -7,11 +8,38 @@
 <html><body>
 
 <h1>Measure - {{ measure.name }}</h1>
+<h1>Measure - {{ measure.pk }}</h1>
+<h1>Measure - {{ measure.data }}</h1>
 
-<form action="{% url 'measure-create' pk=measure.pk %}" method="POST">
+<form action="{% url 'measure-create' %}" method="POST">
     {% csrf_token %}
-    {% render_form serializer %}
+    <input id="your_name" type="text" name="measure.name" value="{{ measure.name }}">
     <input type="submit" value="Save">
 </form>
 
 </body></html>
+
+<form method="get">
+    Name  <input type="text" name="name"><br>
+    Bottom border  <input type="number" name="bottom_border"><br>
+    Upper border  <input type="number" name="upper_border"><br>
+    R  <input type="number" name="r"><br>
+    Epsilon  <input type="number" name="epsilon"><br>
+    <input type="submit" value="Save">
+</form>  -->
+
+
+{% load rest_framework %}
+{% block content %}
+    
+    <form action="" method="post">
+        {% csrf_token %}
+        Name  <input type="text" name="name"><br>
+        Bottom border  <input type="number" step=any name="bottom_border"><br>
+        Upper border  <input type="number" step=any name="upper_border"><br>
+        R  <input type="number" step=any name="r"><br>
+        Epsilon  <input type="number" step=any name="epsilon"><br>
+        <input type="submit" value="Save">
+    </form>
+
+{% endblock %}

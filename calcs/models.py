@@ -22,7 +22,7 @@ class Measure(models.Model):
     # нашелся ли минимум
     result_exist = models.BooleanField(default=False)
     # добавить причину, если не нашелся
-    exist_reason = models.CharField(max_length=200, default='')
+    exit_reason = models.CharField(max_length=200, default='default')
 
     class Meta:
         ordering = ('date',)

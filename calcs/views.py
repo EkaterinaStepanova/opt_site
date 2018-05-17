@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 # Create your views here.
 
 from calcs.models import Measure
@@ -16,13 +15,14 @@ from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter
 
 from django_filters.rest_framework import FilterSet 
 
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.renderers import TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 #reg form
 from django.views.generic.edit import CreateView
+from calcs.forms import MeasureForm
 
 # class UserCreate(CreateView):
 #     model = User
@@ -76,17 +76,15 @@ class MeasureList(generics.ListCreateAPIView):
         queryset = Measure.objects.all()
         return Response({'measures': queryset})
 
-    #def perform_create(self, serializer):
-    #    serializer.save()
-
 
 class MeasureDetail(generics.RetrieveAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-detail'
 
-    renderer_classes = [TemplateHTMLRenderer]
+    renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer)
     template_name = 'calcs/measure_detail.html'
+
 
     def get_object(self, pk):
         try:
@@ -97,10 +95,7 @@ class MeasureDetail(generics.RetrieveAPIView):
     def get(self, request, pk, format=None):
         measure = self.get_object(pk)
         serializer = MeasureSerializer(measure)
-        template_name = 'calcs/measure_detail.html'
         return Response({ 'serializer': serializer, 'measure': measure })
-
-
 
 
 from django.shortcuts import redirect 
@@ -109,28 +104,17 @@ class MeasureCreate(generics.ListCreateAPIView):
     serializer_class = MeasureSerializer
     name = 'measure-create'
 
-    renderer_classes = [TemplateHTMLRenderer]
+    renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer)
     template_name = 'calcs/measure_create.html'
 
-    def post(self, request, pk):
-        #measure = get_object_or_404(Measure, pk=pk)
-        serializer = MeasureSerializer(data=request.data, context={'request': request})
-
-        if not serializer.is_valid():
-            return Response({ 'serializer': serializer, 'measure': measure })
-        serializer.save()       
-        return redirect('/measure/', request=request)
-
-
-    # class UserCreate(CreateView):
-#     model = User
-#     fields = ['username', password]
-
-#     def form_valid(self, form):
-#         form.instance.created_by = self.request.user
-#         return super(AuthorCreate, self).form_valid(form)
-
-
+    def post(self, request, *args, **kwargs):
+        form = MeasureForm(request.POST)
+        if form.is_valid():
+            measure = form.save()
+            measure.save()
+            serializer = MeasureSerializer(measure, data=request.data, context={'request': request})
+            if serializer.is_valid(raise_exception=True):
+                return redirect('/measure/', request=request)
 
 
 class ApiRoot(generics.GenericAPIView):

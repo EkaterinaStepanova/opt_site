@@ -33,9 +33,9 @@ body {
     float: right;
 }
 
-/*.post-form textarea, .post-form input {
+.post-form textarea, .post-form input {
     width: 100%;
-}*/
+}
 
 .measure {
     margin-bottom: 40px;

@@ -1,10 +1,21 @@
-<div>
-    <h1><a href="/">Title</a></h1>
-</div>
-    
-<div>
-    <h3>Measure name: {{ measure.name }}</h3>
-    <p>[{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
-    <p>R = {{ measure.r }}</p>
-    <p>Eps = {{ measure.epsilon }}</p>
-</div>
+ {% extends 'calcs/base.html' %}
+
+{% block content %}
+    <div>
+        <h3>Measure name: {{ measure.name }}</h3>
+        <p>{{ measure.date|date:"N j, o,"  }} {{ measure.date|time:"P"}}</p>
+        <p>[{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
+        <br>
+        <p>R = {{ measure.r }}</p>
+        <p>Eps = {{ measure.epsilon }}</p>
+        <br>
+        {% if measure.result_exist == True %}
+            <p>Result:</p>
+            <p>iterations_number = {{ measure.iterations_number }}</p>
+            <p>function_minimum = {{ measure.function_minimum }}</p>
+            <p>arg_minimum = {{ measure.arg_minimum }}</p>
+        {% else %}
+            <p>Error in calculations: {{ measure.exit_reason }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

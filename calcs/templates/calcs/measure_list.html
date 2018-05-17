@@ -1,7 +1,6 @@
-<div>
-    <h1><a href="/">Title</a></h1>
-</div>
-    
+{% extends 'calcs/base.html' %}
+
+{% block content %}
 <ul>
     {% for measure in measures %}
         <div>
@@ -11,3 +10,4 @@
         </div>
     {% endfor %}
 </ul>
+{% endblock %}
