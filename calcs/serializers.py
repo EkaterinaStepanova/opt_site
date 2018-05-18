@@ -9,9 +9,16 @@ class MeasureSerializer(serializers.HyperlinkedModelSerializer):
         model = Measure
         fields = ( 
             'name', 
+
             'bottom_border', 
             'upper_border', 
             'r', 
             'epsilon', 
+
+            'iterations_number',
+            'function_minimum',
+            'arg_minimum',
+
+            'date',        
             )
 

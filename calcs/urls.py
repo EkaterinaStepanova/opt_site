@@ -1,7 +1,10 @@
 from django.conf.urls import url, include
 from django.urls import path
+
 from calcs import views
 
+from django.conf import settings
+from django.views.static import serve
 
 urlpatterns = [
     url(r'^measure/$', 
@@ -27,3 +30,12 @@ urlpatterns = [
         views.ApiRoot.as_view(),
         name=views.ApiRoot.name),
 ]
+
+#urlpatterns += staticfiles_urlpatterns()
+
+if settings.DEBUG:
+    urlpatterns +=[
+        url(r'^static/(?P<path>.*)$',
+            serve, { 'document_root' : 
+            settings.MEDIA_ROOT, }),
+    ]

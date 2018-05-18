@@ -1,7 +1,10 @@
 from math import cos, pi, fabs
+import uuid
 
-#import pylab
-#from matplotlib import mlab
+from django.db import models
+
+import pylab
+from matplotlib import mlab
 
 def f(x):
     #return 10 + x*x - 10*cos(2*pi*x)
@@ -75,23 +78,28 @@ def global_search(measure):
     measure.function_minimum = min_z
     measure.arg_minimum = min_x
     measure.result_exist = True
-    print("Strongin. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
-    return measure
     #print("Strongin. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
     
-    # #drawing
-    # xmin = a
-    # xmax = b
-    # dx = 0.005
-    # xlist = mlab.frange (xmin, xmax, dx)
-    # ylist1 = [f(x) for x in xlist]
-    # fig = pylab.figure(0)
-    # pylab.subplot()
-    # pylab.plot(xlist, ylist1, "b-") 
-    # pylab.plot(x, z, "o") 
-    # pylab.plot(min_x, min_z, "ro")  
-    # fig.suptitle('Strongin '+str(k)+' iterations. X = '+str(min_x), fontsize=16)
-    # #pylab.show()
+    #drawing
+    xmin = a
+    xmax = b
+    dx = (float)(xmax-xmin)/150
+    xlist = mlab.frange (xmin, xmax, dx)
+    ylist1 = [f(x) for x in xlist]
+    fig = pylab.figure(0)
+    pylab.subplot()
+    pylab.plot(xlist, ylist1, "b-") 
+    pylab.plot(x, z, "o") 
+    pylab.plot(min_x, min_z, "ro")  
+    fig.suptitle('Strongin '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
+
+
+    filename = str(uuid.uuid1())+'.jpg'
+    fig.savefig('static/'+filename)
+    measure.graph_image_filename = filename
+
+    return measure
+    #pylab.show()
 
 #----------End of Strongin--------------
 
@@ -161,22 +169,27 @@ def piyavsky(measure):
     measure.arg_minimum = min_x
     measure.result_exist = True
 
-    return measure
     #print("Piyavsky. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
 
-    # #drawing
-    # xmin = a
-    # xmax = b
-    # dx = 0.005
-    # xlist = mlab.frange (xmin, xmax, dx)
-    # ylist = [f(x) for x in xlist]
-    # fig = pylab.figure(1)
-    # pylab.subplot()
-    # pylab.plot(xlist, ylist, "b-") 
-    # pylab.plot(x, z, "o") 
-    # pylab.plot(min_x, min_z, "ro")  
-    # fig.suptitle('Piyavsky '+str(k)+' iterations. X = '+str(min_x), fontsize=16)
-    # #pylab.show()
+    #drawing
+    xmin = a
+    xmax = b
+    dx = (float)(xmax-xmin)/150
+    xlist = mlab.frange (xmin, xmax, dx)
+    ylist = [f(x) for x in xlist]
+    fig = pylab.figure(1)
+    pylab.subplot()
+    pylab.plot(xlist, ylist, "b-") 
+    pylab.plot(x, z, "o") 
+    pylab.plot(min_x, min_z, "ro")  
+    fig.suptitle('Piyavsky '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
+
+    filename = str(uuid.uuid1())+'.jpg'
+    fig.savefig('static/'+filename)
+    measure.graph_image_filename = filename
+
+    return measure
+    #pylab.show()
 
 #----------End of Piyavsky--------------
 

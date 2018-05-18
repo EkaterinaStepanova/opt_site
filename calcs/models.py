@@ -23,6 +23,8 @@ class Measure(models.Model):
     result_exist = models.BooleanField(default=False)
     # добавить причину, если не нашелся
     exit_reason = models.CharField(max_length=200, default='default')
+    # имя графика
+    graph_image_filename = models.CharField(max_length=200,  default='')
 
     # GLOBAL_SEARCH = 'gs'
     # PIYAVSKY = 'pi'
