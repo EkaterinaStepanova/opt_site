@@ -4,7 +4,8 @@ from django.urls import path
 from calcs import views
 
 from django.conf import settings
-from django.views.static import serve
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     url(r'^measure/$', 
@@ -33,9 +34,21 @@ urlpatterns = [
 
 #urlpatterns += staticfiles_urlpatterns()
 
+# if settings.DEBUG:
+#     urlpatterns +=[
+#         url(r'^static/(?P<path>.*)$',
+#             serve, { 'document_root' : 
+#             settings.MEDIA_ROOT, }),
+#     ]
+
+from django.views.static import serve
 if settings.DEBUG:
     urlpatterns +=[
-        url(r'^static/(?P<path>.*)$',
+        url(r'media/(?P<path>.*)$',
             serve, { 'document_root' : 
             settings.MEDIA_ROOT, }),
     ]
+
+# urlpatterns += [
+#     static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT),
+# ]

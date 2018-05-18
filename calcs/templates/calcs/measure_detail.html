@@ -13,13 +13,8 @@
             <p>Result:</p>
             <p>iterations_number = {{ measure.iterations_number }}</p>
             <p>function_minimum = {{ measure.function_minimum }}</p>
-            <p>arg_minimum = {{ measure.arg_minimum }}</p>
-            Graph:
-            <br>
-                {% load static %} 
-                <img src="{% static measure.graph_image_filename %}" alt="My image">
-                <img src="E:/Programms/OptSite/no_user/opt_site/static/graphs/10f3e5cc-5a0a-11e8-9bf8-1078d2da74b3.jpg" alt="My image">
-            <br>
+            <p>arg_minimum = {{ measure.arg_minimum }}</p>      
+            <br><img src="media/{{measure.graph_image_filename}}" alt="Graph">
         {% else %}
             <p>Error in calculations: {{ measure.exit_reason }}</p>
         {% endif %}
