@@ -8,6 +8,7 @@ Markdown==2.6.11
 matplotlib==2.2.2
 numpy==1.14.3
 Pillow==5.1.0
+py-expression-eval==0.3.4
 pyparsing==2.2.0
 python-dateutil==2.7.3
 pytz==2018.4

@@ -8,7 +8,7 @@ class Measure(models.Model):
     upper_border  = models.FloatField(default=1)
     r             = models.FloatField(default=3.4)
     epsilon       = models.FloatField(default=0.001)
-    #functions     = models.CharField()
+    function     = models.CharField(max_length=200, default='1 + x*x - cos(18*x*x)')
 
     #out
     iterations_number = models.IntegerField(default=0)

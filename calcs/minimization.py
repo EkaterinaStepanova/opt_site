@@ -6,8 +6,9 @@ from django.db import models
 import pylab
 from matplotlib import mlab
 import os
+from py_expression_eval import Parser
 
-def f(x):
+def f_(x):
     #return 10 + x*x - 10*cos(2*pi*x)
     return 1 + x*x - cos(18*x*x)
 
@@ -32,53 +33,64 @@ def global_search(measure):
     r=measure.r
     epsilon=measure.epsilon
 
-    x = [a, b]
-    z = [f(a), f(b)]
-    t = 1
-    k = 2 
-    M = fabs((z[1] - z[0])/(x[1] - x[0]))
-    while (x[t] - x[t-1] > epsilon):
-        for i in range(1, k):
-            M_buf = fabs((z[i] - z[i-1])/(x[i] - x[i-1]))
-            if M_buf > M:
-                M = M_buf
-        #2
-        m = get_m_S(M, r)
-        #3
-        R_max = R_S(m, x[0], x[1], z[0], z[1])
+    try:
+        parser = Parser()
+        func = parser.parse(measure.function)
+        f = lambda x: func.evaluate({func.variables()[0]: x})
+
+
+        x = [a, b]
+        z = [f(a), f(b)]
         t = 1
-        for i in range(2, k):
-            R_buf = R_S(m, x[i-1], x[i], z[i-1], z[i])
-            if ( R_buf > R_max ):
-                R_max = R_buf
-                t = i
-        #4       
-        x_new = (x[t] + x[t-1])/2 - (z[t] - z[t-1])/2/m
-        z_new = f(x_new)
-        
-        if x_new > x[k-1]:
-            x.append(x_new)
-            z.append(z_new)
-        else:
-            for i in range(0, k):
-                if x_new < x[i]:
-                    x.insert(i, x_new)
-                    z.insert(i, z_new)
-                    break
-        k = k + 1
-        #5 and #1
-        
-    min_x = x[0]
-    min_z = z[0] 
-    for i in range(1, k):
-        if f(x[i]) < min_z:
-            min_x = x[i]
-            min_z = f(x[i])
+        k = 2 
+        M = fabs((z[1] - z[0])/(x[1] - x[0]))
+        while (x[t] - x[t-1] > epsilon):
+            for i in range(1, k):
+                M_buf = fabs((z[i] - z[i-1])/(x[i] - x[i-1]))
+                if M_buf > M:
+                    M = M_buf
+            #2
+            m = get_m_S(M, r)
+            #3
+            R_max = R_S(m, x[0], x[1], z[0], z[1])
+            t = 1
+            for i in range(2, k):
+                R_buf = R_S(m, x[i-1], x[i], z[i-1], z[i])
+                if ( R_buf > R_max ):
+                    R_max = R_buf
+                    t = i
+            #4       
+            x_new = (x[t] + x[t-1])/2 - (z[t] - z[t-1])/2/m
+            z_new = f(x_new)
+            
+            if x_new > x[k-1]:
+                x.append(x_new)
+                z.append(z_new)
+            else:
+                for i in range(0, k):
+                    if x_new < x[i]:
+                        x.insert(i, x_new)
+                        z.insert(i, z_new)
+                        break
+            k = k + 1
+            #5 and #1
+            
+        min_x = x[0]
+        min_z = z[0] 
+        for i in range(1, k):
+            if f(x[i]) < min_z:
+                min_x = x[i]
+                min_z = f(x[i])
+    except Exception as exc:
+        measure.result_exist = False
+        measure.exit_reason = str(exc)
+        return measure
 
     measure.iterations_number = k
     measure.function_minimum = min_z
     measure.arg_minimum = min_x
     measure.result_exist = True
+    
     #print("Strongin. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
     
     #drawing
@@ -122,48 +134,57 @@ def piyavsky(measure):
     r=measure.r
     epsilon=measure.epsilon
 
-    x = [a, b]
-    z = [f(a), f(b)]
-    t = 1
-    k = 2 
-    M = fabs((z[1] - z[0])/(x[1] - x[0]))
-    while (x[t] - x[t-1] > epsilon):
-        for i in range(1, k):
-            M_buf = fabs((z[i] - z[i-1])/(x[i] - x[i-1]))
-            if M_buf > M:
-                M = M_buf
-        #2
-        m = get_m_P(M, r)
-        #3
-        R_max = R_P(m, x[0], x[1], z[0], z[1])
+    try:
+        parser = Parser()
+        func = parser.parse(measure.function)
+        f = lambda x: func.evaluate({func.variables()[0]: x})
+
+        x = [a, b]
+        z = [f(a), f(b)]
         t = 1
-        for i in range(2, k):
-            R_buf = R_P(m, x[i-1], x[i], z[i-1], z[i])
-            if ( R_buf > R_max ):
-                R_max = R_buf
-                t = i
-        #4       
-        x_new = (x[t] + x[t-1])/2 - (z[t] - z[t-1])/2/m
-        z_new = f(x_new)
-        
-        if x_new > x[k-1]:
-            x.append(x_new)
-            z.append(z_new)
-        else:
-            for i in range(0, k):
-                if x_new < x[i]:
-                    x.insert(i, x_new)
-                    z.insert(i, z_new)
-                    break
-        k = k + 1
-        #5 and #1
-        
-    min_x = x[0]
-    min_z = z[0] 
-    for i in range(1, k):
-        if f(x[i]) < min_z:
-            min_x = x[i]
-            min_z = f(x[i])
+        k = 2 
+        M = fabs((z[1] - z[0])/(x[1] - x[0]))
+        while (x[t] - x[t-1] > epsilon):
+            for i in range(1, k):
+                M_buf = fabs((z[i] - z[i-1])/(x[i] - x[i-1]))
+                if M_buf > M:
+                    M = M_buf
+            #2
+            m = get_m_P(M, r)
+            #3
+            R_max = R_P(m, x[0], x[1], z[0], z[1])
+            t = 1
+            for i in range(2, k):
+                R_buf = R_P(m, x[i-1], x[i], z[i-1], z[i])
+                if ( R_buf > R_max ):
+                    R_max = R_buf
+                    t = i
+            #4       
+            x_new = (x[t] + x[t-1])/2 - (z[t] - z[t-1])/2/m
+            z_new = f(x_new)
+            
+            if x_new > x[k-1]:
+                x.append(x_new)
+                z.append(z_new)
+            else:
+                for i in range(0, k):
+                    if x_new < x[i]:
+                        x.insert(i, x_new)
+                        z.insert(i, z_new)
+                        break
+            k = k + 1
+            #5 and #1
+            
+        min_x = x[0]
+        min_z = z[0] 
+        for i in range(1, k):
+            if f(x[i]) < min_z:
+                min_x = x[i]
+                min_z = f(x[i])
+    except Exception as exc:
+        measure.result_exist = False
+        measure.exit_reason = str(exc)
+        return measure
 
     measure.iterations_number = k
     measure.function_minimum = min_z

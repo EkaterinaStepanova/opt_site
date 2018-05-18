@@ -34,11 +34,12 @@
     
     <form action="" method="post">
         {% csrf_token %}
-        Name  <input type="text" name="name"><br>
-        Bottom border  <input type="number" step=any name="bottom_border"><br>
-        Upper border  <input type="number" step=any name="upper_border"><br>
-        R  <input type="number" step=any name="r"><br>
-        Epsilon  <input type="number" step=any name="epsilon"><br>
+        Name  <input type="text" name="name" value="Grishagin"><br>
+        Function  <input type="text" name="function" value="1 + x*x - cos(18*x*x)"><br>
+        Bottom border  <input type="number" step=any name="bottom_border" value="0.2"><br>
+        Upper border  <input type="number" step=any name="upper_border" value="3.2"><br>
+        R  <input type="number" step=any name="r" value="2.4"><br>
+        Epsilon  <input type="number" step=any name="epsilon" value="0.01"><br>
 
         <input type="submit" value="Save">
     </form>

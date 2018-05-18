@@ -123,6 +123,8 @@ class MeasureCreate(generics.ListCreateAPIView):
                 print(measure.get_method())
 
                 return redirect('/measure/', request=request)
+        # !TODO Show error message!
+        return redirect('/measure/create', request=request)
 
 
 class ApiRoot(generics.GenericAPIView):

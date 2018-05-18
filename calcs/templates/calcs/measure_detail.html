@@ -3,6 +3,7 @@
 {% block content %}
     <div>
         <h3>Measure name: {{ measure.name }}</h3>
+        <p>Function:  {{ measure.function }}</p>
         <p>{{ measure.date|date:"N j, o,"  }} {{ measure.date|time:"P"}}</p>
         <p>[{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
         <br>

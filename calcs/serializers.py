@@ -14,6 +14,7 @@ class MeasureSerializer(serializers.HyperlinkedModelSerializer):
             'upper_border', 
             'r', 
             'epsilon', 
+            'function',
 
             'iterations_number',
             'function_minimum',
