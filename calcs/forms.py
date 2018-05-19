@@ -13,8 +13,8 @@ class MeasureForm(forms.ModelForm):
             print(func.variables())
             if len(func.variables()) > 1:
                     raise Exception('too much variables')
-        except Exception:
-            raise forms.ValidationError(str(data)+' is not a function')
+        except Exception as exc:
+            raise forms.ValidationError('Error! '+str(data)+' is not correct function')
         return data
 
     class Meta:
