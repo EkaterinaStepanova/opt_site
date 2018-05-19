@@ -23,9 +23,15 @@ from django.shortcuts import get_object_or_404
 #reg form
 from django.views.generic.edit import CreateView
 from calcs.forms import MeasureForm
+from django.contrib import messages 
+from django.conf import settings
 
 #minimization
 from calcs.minimization import minimize
+
+#pagination
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 
 # class UserCreate(CreateView):
 #     model = User
@@ -53,10 +59,11 @@ class MeasureListFilter(FilterSet):
             )
 
 
-class MeasureList(generics.ListCreateAPIView):
+class MeasureList(generics.ListAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-list'
+    
 
     #filter_class = MeasureListFilter
     filter_fields = (
@@ -74,11 +81,17 @@ class MeasureList(generics.ListCreateAPIView):
         )
 
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'calcs/measure_list.html'  
+    template_name = 'calcs/measure_list.html' 
 
-    def get(self, request):
-        queryset = Measure.objects.all()
-        return Response({'measures': queryset})
+    def list(self, request, *args, **kwargs):
+        paginator = Paginator(self.queryset, settings.REST_FRAMEWORK['PAGE_SIZE']) # Show 25 contacts per page
+        page = request.GET.get('page')
+        measures = paginator.get_page(page)
+        return render(request, self.template_name, {'measures': measures})
+
+    #def get(self, request):
+    #    queryset = Measure.objects.all()
+    #   return Response({'measures': queryset})
 
 
 class MeasureDetail(generics.RetrieveAPIView):
@@ -121,10 +134,10 @@ class MeasureCreate(generics.ListCreateAPIView):
                 minimize_result = minimize(measure)
                 minimize_result.save()
                 print(measure.get_method())
-
                 return redirect('/measure/', request=request)
         # !TODO Show error message!
-        return redirect('/measure/create', request=request)
+        messages.error(request, str(form['function'].errors))
+        return render(request, self.template_name, {'form': form})
 
 
 class ApiRoot(generics.GenericAPIView):

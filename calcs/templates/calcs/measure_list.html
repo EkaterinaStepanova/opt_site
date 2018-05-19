@@ -1,13 +1,38 @@
 {% extends 'calcs/base.html' %}
 
 {% block content %}
-<ul>
-    {% for measure in measures %}
-        <div>
-            <li>
-                <h3><a href="/measure/{{ measure.pk }}">{{ measure.name }}</a></h3>
-            </li>
-        </div>
-    {% endfor %}
-</ul>
+    <!-- pagination -->
+    <div class="pagination" style="margin-top: 0;  text-align: center;">
+        <span class="step-links">
+            {% if measures.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ measures.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ measures.number }} of {{ measures.paginator.num_pages }}.
+            </span>
+
+            {% if measures.has_next %}
+                <a href="?page={{ measures.next_page_number }}">next</a>
+                <a href="?page={{ measures.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <!-- list of objects -->
+    <ul>
+        {% for measure in measures %}
+            <div>
+                <li>
+                    <h3><a href="/measure/{{ measure.pk }}">{{ measure.name }}</a></h3>
+                    <p>{{ measure.date|time:"G:i"}} {{ measure.date|date:"N j, o" }}</p>
+                </li>
+            </div>
+        {% endfor %}
+    </ul>
+
+    
+
 {% endblock %}
+
