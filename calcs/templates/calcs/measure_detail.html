@@ -4,6 +4,7 @@
     <div>
         <h3>Measure name: {{ measure.name }}</h3>
         <p>{{ measure.date|time:"G:i"}} {{ measure.date|date:"N j, o"}}</p>
+        <p>Method:  {{ measure.method }}</p>     
         <p>Function:  {{ measure.function }}</p>       
         <p>[{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
         <br>

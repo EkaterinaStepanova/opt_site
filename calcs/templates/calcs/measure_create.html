@@ -33,6 +33,10 @@
     <form action="" method="post">
         {% csrf_token %}
         Name  <input type="text" name="name" value="Grishagin"><br>
+        Method <select  name="method">
+                <option value="global_search">global_search</option>
+                <option value="piyavsky">piyavsky</option>
+        </select><br>
 
             Function  <input type="text" name="function" value="1 + x*x - cos(18*x*x)">           
                 {% if messages %}

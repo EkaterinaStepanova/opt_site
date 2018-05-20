@@ -81,35 +81,36 @@ def global_search(measure):
             if f(x[i]) < min_z:
                 min_x = x[i]
                 min_z = f(x[i])
+    
+
+        measure.iterations_number = k
+        measure.function_minimum = min_z
+        measure.arg_minimum = min_x
+        measure.result_exist = True
+        
+        #print("Strongin. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
+        
+        #drawing
+        xmin = a
+        xmax = b
+        dx = (float)(xmax-xmin)/300
+        xlist = mlab.frange (xmin, xmax, dx)
+        ylist1 = [f(x) for x in xlist]
+        fig = pylab.figure(0)
+        pylab.subplot()
+        pylab.plot(xlist, ylist1, "b-") 
+        pylab.plot(x, z, "o") 
+        pylab.plot(min_x, min_z, "ro")  
+        #fig.suptitle('Strongin '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
+
+
+        filename = str(uuid.uuid1())+'.jpg'
+        fig.savefig('media/'+filename)
+        measure.graph_image_filename = filename
+
     except Exception as exc:
         measure.result_exist = False
         measure.exit_reason = str(exc)
-        return measure
-
-    measure.iterations_number = k
-    measure.function_minimum = min_z
-    measure.arg_minimum = min_x
-    measure.result_exist = True
-    
-    #print("Strongin. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
-    
-    #drawing
-    xmin = a
-    xmax = b
-    dx = (float)(xmax-xmin)/300
-    xlist = mlab.frange (xmin, xmax, dx)
-    ylist1 = [f(x) for x in xlist]
-    fig = pylab.figure(0)
-    pylab.subplot()
-    pylab.plot(xlist, ylist1, "b-") 
-    pylab.plot(x, z, "o") 
-    pylab.plot(min_x, min_z, "ro")  
-    #fig.suptitle('Strongin '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
-
-
-    filename = str(uuid.uuid1())+'.jpg'
-    fig.savefig('media/'+filename)
-    measure.graph_image_filename = filename
 
     return measure
     #pylab.show()
@@ -181,34 +182,35 @@ def piyavsky(measure):
             if f(x[i]) < min_z:
                 min_x = x[i]
                 min_z = f(x[i])
+    
+
+        measure.iterations_number = k
+        measure.function_minimum = min_z
+        measure.arg_minimum = min_x
+        measure.result_exist = True
+
+        #print("Piyavsky. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
+
+        #drawing
+        xmin = a
+        xmax = b
+        dx = (float)(xmax-xmin)/300
+        xlist = mlab.frange (xmin, xmax, dx)
+        ylist = [f(x) for x in xlist]
+        fig = pylab.figure(1)
+        pylab.subplot()
+        pylab.plot(xlist, ylist, "b-") 
+        pylab.plot(x, z, "o") 
+        pylab.plot(min_x, min_z, "ro")  
+        #fig.suptitle('Piyavsky '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
+
+        filename = str(uuid.uuid1())+'.jpg'
+        fig.savefig('media/'+filename)
+        measure.graph_image_filename = filename
+
     except Exception as exc:
         measure.result_exist = False
         measure.exit_reason = str(exc)
-        return measure
-
-    measure.iterations_number = k
-    measure.function_minimum = min_z
-    measure.arg_minimum = min_x
-    measure.result_exist = True
-
-    #print("Piyavsky. Minimum on ",k," iteration: f(",min_x,") = ",min_z)
-
-    #drawing
-    xmin = a
-    xmax = b
-    dx = (float)(xmax-xmin)/300
-    xlist = mlab.frange (xmin, xmax, dx)
-    ylist = [f(x) for x in xlist]
-    fig = pylab.figure(1)
-    pylab.subplot()
-    pylab.plot(xlist, ylist, "b-") 
-    pylab.plot(x, z, "o") 
-    pylab.plot(min_x, min_z, "ro")  
-    #fig.suptitle('Piyavsky '+str(k)+' iterations. X = '+str(min_x), fontsize=12)
-
-    filename = str(uuid.uuid1())+'.jpg'
-    fig.savefig('media/'+filename)
-    measure.graph_image_filename = filename
 
     return measure
     #pylab.show()

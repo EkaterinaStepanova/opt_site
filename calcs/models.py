@@ -26,26 +26,26 @@ class Measure(models.Model):
     # имя графика
     graph_image_filename = models.CharField(max_length=200,  default='')
 
-    # GLOBAL_SEARCH = 'gs'
-    # PIYAVSKY = 'pi'
-    # METHOD_CHOICES = (
-    #     (GLOBAL_SEARCH, 'global_search'),
-    #     (PIYAVSKY, 'piyavsky'),
-    # )
-    # method = models.CharField(
-    #     max_length=2,
-    #     choices=METHOD_CHOICES,
-    # )
+    GLOBAL_SEARCH = 'global_search'
+    PIYAVSKY = 'piyavsky'
+    METHOD_CHOICES = (
+        (GLOBAL_SEARCH, 'global_search'),
+        (PIYAVSKY, 'piyavsky'),
+    )
+    method = models.CharField(
+        max_length=20,
+        choices=METHOD_CHOICES,
+        default=GLOBAL_SEARCH,
+    )
 
     class Meta:
         ordering = ('date',)
 
     def get_method(self):
-        # if self.method in self.GLOBAL_SEARCH:
-        #     return 'global_search'
-        # if self.method in self.PIYAVSKY:
-        #     return 'piyavsky'
-        return 'global_search'
+        if self.method in self.METHOD_CHOICES[0]:
+            return 'global_search'
+        if self.method in self.METHOD_CHOICES[1]:
+            return 'piyavsky'
 
     def __str__(self):
         return self.name
