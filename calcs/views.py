@@ -2,7 +2,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from calcs.models import Measure
-from calcs.serializers import MeasureSerializer
+from calcs.serializers import MeasureSerializer, UserSerializer
 
 from rest_framework import generics
 from rest_framework.response import Response
@@ -36,12 +36,14 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-class UserCreate(CreateView):
+class UserCreate(generics.CreateAPIView):
     model = User
     fields = ['username', 'password']
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'calcs/registration.html' 
     name = 'user-create'
+    serializer_class = UserSerializer
+
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -59,6 +61,31 @@ class UserCreate(CreateView):
         print(form['username'].errors, form['password'].errors)
         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
         return render(request, self.template_name, {'form': form})
+
+
+# class UserCreate(CreateView):
+#     model = User
+#     fields = ['username', 'password']
+#     renderer_classes = [TemplateHTMLRenderer]
+#     template_name = 'calcs/registration.html' 
+#     name = 'user-create'
+
+#     def form_valid(self, form):
+#         form.instance.created_by = self.request.user
+#         return super(UserCreate, self).form_valid(form)
+
+#     def post(self, request, *args, **kwargs):
+#         form = UserForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             user.save()
+#             serializer = UserSerializer(user, data=request.data, context={'request': request})
+#             if serializer.is_valid(raise_exception=True):
+#                 return redirect('/measure/', request=request)
+#         # !TODO Show error message!
+#         print(form['username'].errors, form['password'].errors)
+#         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
+#         return render(request, self.template_name, {'form': form})
 
 
 class MeasureListFilter(FilterSet):
@@ -134,7 +161,7 @@ class MeasureDetail(generics.RetrieveAPIView):
 
 
 from django.shortcuts import redirect 
-class MeasureCreate(generics.ListCreateAPIView):
+class MeasureCreate(generics.CreateAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-create'
