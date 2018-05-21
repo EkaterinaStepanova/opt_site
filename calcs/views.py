@@ -22,7 +22,7 @@ from django.shortcuts import get_object_or_404
 
 #reg form
 from django.views.generic.edit import CreateView
-from calcs.forms import MeasureForm
+from calcs.forms import MeasureForm, UserForm
 from django.contrib import messages 
 from django.conf import settings
 
@@ -33,13 +33,32 @@ from calcs.minimization import minimize
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
-# class UserCreate(CreateView):
-#     model = User
-#     fields = ['username', password]
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-#     def form_valid(self, form):
-#         form.instance.created_by = self.request.user
-#         return super(AuthorCreate, self).form_valid(form)
+class UserCreate(CreateView):
+    model = User
+    fields = ['username', 'password']
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/registration.html' 
+    name = 'user-create'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(UserCreate, self).form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.save()
+            serializer = UserSerializer(user, data=request.data, context={'request': request})
+            if serializer.is_valid(raise_exception=True):
+                return redirect('/measure/', request=request)
+        # !TODO Show error message!
+        print(form['username'].errors, form['password'].errors)
+        messages.error(request, str(form['username'].errors)+str(form['password'].errors))
+        return render(request, self.template_name, {'form': form})
 
 
 class MeasureListFilter(FilterSet):
@@ -145,6 +164,7 @@ class ApiRoot(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         return Response({
             'measure': reverse(MeasureList.name, request=request),
+            #'user': reverse(UserCreate.name, request=request),
             })
 
 

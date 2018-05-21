@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Measure(models.Model):
@@ -37,6 +38,12 @@ class Measure(models.Model):
         choices=METHOD_CHOICES,
         default=GLOBAL_SEARCH,
     )
+
+    owner = models.ForeignKey(
+        User,
+        related_name = 'measure',
+        on_delete = models.CASCADE
+        )
 
     class Meta:
         ordering = ('date',)

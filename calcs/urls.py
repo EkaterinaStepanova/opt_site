@@ -19,8 +19,13 @@ urlpatterns = [
         name=views.MeasureCreate.name),
 
     # url(r'^sign-up/(?P<pk>[0-9]+)/$',
-    #      views.UserManager.as_view(action='sign-up'),
-    #      name=views.UserManager.name),
+    #      views.UserCreate.as_view(),
+    #      name=views.UserCreate.name),
+    url(r'^sign-up/$',
+         views.UserCreate.as_view(),
+         name=views.UserCreate.name
+         ),
+    #
     # path('user/', include('django.contrib.auth.urls')),
     #url(r'^user/', include('django.contrib.auth.urls')),
 

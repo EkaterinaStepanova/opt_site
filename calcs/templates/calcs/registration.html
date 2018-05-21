@@ -1,0 +1,33 @@
+{% extends 'calcs/base.html' %}
+
+{% block content %}
+  <!-- <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form> -->
+
+  <h2>Sign up</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        {% if messages %}
+            <div class="errs" style="color: #ff0000;">
+                {% for message in messages %}
+                    {{message}} 
+                {% endfor %}
+            </div>
+        {% else %}           
+            <br>
+        {% endif %}
+          
+        Username <input type="text" name="username" value=""><br>
+        Password <input type="text" name="password" value=""><br>
+        Confirm password <input type="text" name="confirm_password" value=""><br>      
+                      
+        <button type="submit">Sign up</button>
+    </form>
+{% endblock %}
+
+

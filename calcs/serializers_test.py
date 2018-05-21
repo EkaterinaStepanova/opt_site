@@ -29,7 +29,8 @@ serializer_context = {
 '''user=User.objects.create_user('username', password='userpassword')
 user.is_superuser=False
 user.is_staff=False
-user.save()'''
+user.save()
+'''
 
 admin = User.objects.get(username='vladislav')
 user = User.objects.get(username='username')
