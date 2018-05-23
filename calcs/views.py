@@ -171,9 +171,8 @@ class MeasureList(generics.ListAPIView):
         measures = paginator.get_page(page)
         return render(request, self.template_name, {'measures': measures})
 
-    #def get(self, request):
-    #    queryset = Measure.objects.all()
-    #   return Response({'measures': queryset})
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 
 class MeasureDetail(generics.RetrieveAPIView):
@@ -220,6 +219,9 @@ class MeasureCreate(generics.CreateAPIView):
         # !TODO Show error message!
         messages.error(request, str(form['function'].errors))
         return render(request, self.template_name, {'form': form})
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 
 class ApiRoot(generics.GenericAPIView):
