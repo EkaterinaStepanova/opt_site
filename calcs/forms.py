@@ -36,25 +36,20 @@ class UserCreateForm(forms.ModelForm):
 
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
-    def clean_username(self):
-        username_ = self.cleaned_data['username'] 
-
-        if User.objects.filter(username=username_).exists():
-                raise forms.ValidationError('User with this name already exist')
-
-        return data
-
     def clean(self):
         data = self.cleaned_data
 
-        password = data['password']   
-        confirm_password = data['confirm_password']  
-        if password != confirm_password:
-            self.add_error( 'password', 'Passwords does not match' )
-            raise forms.ValidationError("Passwords does not match")
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']  
+        confirm_password = self.cleaned_data['confirm_password']  
+
+        if User.objects.filter(username=username).exists():
+            self.add_error( 'username', 'User '+str(username)+' already exist')
+        else:
+            if password != confirm_password:
+                self.add_error( 'password', 'Passwords does not match' )
 
         return data
-
 
     class Meta:
         model = User

@@ -38,6 +38,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+
 class UserCreate(generics.CreateAPIView):
     model = User
     fields = ['username', 'password']
@@ -46,12 +47,14 @@ class UserCreate(generics.CreateAPIView):
     name = 'user-create'
     serializer_class = UserSerializer
 
-
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super(UserCreate, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/measure/', request=request) 
+
         form = UserCreateForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -64,6 +67,11 @@ class UserCreate(generics.CreateAPIView):
         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
         return render(request, self.template_name, {'form': form})
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/measure/', request=request) 
+        return render(request, self.template_name)
+
 
 class UserLogin(APIView):
     model = User
@@ -73,20 +81,15 @@ class UserLogin(APIView):
     name = 'user-login'
     serializer_class = UserSerializer
 
-
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super(UserCreate, self).form_valid(form)
 
-    # def get_object(self, pk):
-    #     try:
-    #         return User.objects.get(pk=pk)
-    #     except Measure.DoesNotExist:
-    #         raise Http404
-
     def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/measure/', request=request) 
+
         form = UserLoginForm(request.POST)
-        print(form.__dict__)
         if form.is_valid():
             user = form.save(commit=False)
             user = authenticate(username=user.username, password=user.password)
@@ -102,6 +105,22 @@ class UserLogin(APIView):
         return render(request, self.template_name, {'form': form})
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/measure/', request=request) 
+        return render(request, self.template_name)
+
+
+class UserLogout(generics.RetrieveAPIView):
+    model = User
+    fields = ['username', 'password']
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/base.html' 
+    name = 'user-logout'
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
         return render(request, self.template_name)
 
 
