@@ -32,27 +32,54 @@ class MeasureForm(forms.ModelForm):
         fields = ['name', 'bottom_border', 'upper_border', 'r', 'epsilon', 'function', 'method']
 
 
-class UserForm(forms.ModelForm):
+class UserCreateForm(forms.ModelForm):
 
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     def clean_username(self):
-        data = self.cleaned_data['username'] 
+        username_ = self.cleaned_data['username'] 
 
-        if User.objects.filter(username=self.cleaned_data['username']).exists():
+        if User.objects.filter(username=username_).exists():
                 raise forms.ValidationError('User with this name already exist')
 
         return data
 
     def clean(self):
-        password = self.cleaned_data['password']   
-        confirm_password = self.cleaned_data['confirm_password']  
+        data = self.cleaned_data
+
+        password = data['password']   
+        confirm_password = data['confirm_password']  
         if password != confirm_password:
             self.add_error( 'password', 'Passwords does not match' )
             raise forms.ValidationError("Passwords does not match")
 
-        return self.cleaned_data
+        return data
 
+
+    class Meta:
+        model = User
+        fields = ('username','password')
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+
+
+class UserLoginForm(forms.ModelForm):
+
+    def clean(self):  
+        data = self.cleaned_data
+
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']  
+
+        if not User.objects.filter(username=username).exists():
+            self.add_error( 'username', 'User ' + str(username) + ' not foung. Please Sign-up')
+        else:
+            user = User.objects.get(username=username)
+            if not user.check_password(password):
+                self.add_error( 'password', 'Not correct password.' )
+
+        return data
 
     class Meta:
         model = User

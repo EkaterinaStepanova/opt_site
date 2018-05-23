@@ -7,6 +7,8 @@ from calcs.serializers import MeasureSerializer, UserSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+
 
 from rest_framework import permissions
 from rest_framework.throttling import ScopedRateThrottle
@@ -22,7 +24,7 @@ from django.shortcuts import get_object_or_404
 
 #reg form
 from django.views.generic.edit import CreateView
-from calcs.forms import MeasureForm, UserForm
+from calcs.forms import MeasureForm, UserCreateForm, UserLoginForm
 from django.contrib import messages 
 from django.conf import settings
 
@@ -32,9 +34,9 @@ from calcs.minimization import minimize
 #pagination
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-
-from django.contrib.auth.forms import UserCreationForm
+#user
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 class UserCreate(generics.CreateAPIView):
     model = User
@@ -50,42 +52,57 @@ class UserCreate(generics.CreateAPIView):
         return super(UserCreate, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
-        form = UserForm(request.POST)
+        form = UserCreateForm(request.POST)
         if form.is_valid():
             user = form.save()
             user.save()
             serializer = UserSerializer(user, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):
+                logout(request,user)
                 return redirect('/measure/', request=request)
         # !TODO Show error message!
-        print(form['username'].errors, form['password'].errors)
         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
         return render(request, self.template_name, {'form': form})
 
 
-# class UserCreate(CreateView):
-#     model = User
-#     fields = ['username', 'password']
-#     renderer_classes = [TemplateHTMLRenderer]
-#     template_name = 'calcs/registration.html' 
-#     name = 'user-create'
+class UserLogin(APIView):
+    model = User
+    fields = ['username', 'password']
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'calcs/login.html' 
+    name = 'user-login'
+    serializer_class = UserSerializer
 
-#     def form_valid(self, form):
-#         form.instance.created_by = self.request.user
-#         return super(UserCreate, self).form_valid(form)
 
-#     def post(self, request, *args, **kwargs):
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             user.save()
-#             serializer = UserSerializer(user, data=request.data, context={'request': request})
-#             if serializer.is_valid(raise_exception=True):
-#                 return redirect('/measure/', request=request)
-#         # !TODO Show error message!
-#         print(form['username'].errors, form['password'].errors)
-#         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
-#         return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(UserCreate, self).form_valid(form)
+
+    # def get_object(self, pk):
+    #     try:
+    #         return User.objects.get(pk=pk)
+    #     except Measure.DoesNotExist:
+    #         raise Http404
+
+    def post(self, request, *args, **kwargs):
+        form = UserLoginForm(request.POST)
+        print(form.__dict__)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user = authenticate(username=user.username, password=user.password)
+            if user is not None:
+                login(request, user)
+                serializer = UserSerializer(user, data=request.data, context={'request': request})
+                if serializer.is_valid(raise_exception=True):
+                    return redirect('/measure/', request=request)
+                else:
+                    raise Http404("Can not get serializer")
+
+        messages.error(request, str(form['username'].errors)+str(form['password'].errors))
+        return render(request, self.template_name, {'form': form})
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
 
 class MeasureListFilter(FilterSet):

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <h2>Sign up</h2>
+  <h2>Sign in</h2>
     <form method="post">
         {% csrf_token %}
 
@@ -17,10 +17,9 @@
         {% endif %}
           
         Username <input type="text" name="username" value=""><br>
-        Password <input type="text" name="password" value=""><br>
-        Confirm password <input type="text" name="confirm_password" value=""><br>      
+        Password <input type="text" name="password" value=""><br>     
                       
-        <button type="submit">Sign up</button>
+        <button type="submit">Sign in</button>
     </form>
 {% endblock %}
 

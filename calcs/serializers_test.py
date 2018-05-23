@@ -26,10 +26,21 @@ serializer_context = {
 # exec(open('serializers_test.py').read())
 
 
-'''user=User.objects.create_user('username', password='userpassword')
+'''
+from django.contrib.auth.models import User
+user=User.objects.create_user('vlad', password='userpassword')
 user.is_superuser=False
 user.is_staff=False
 user.save()
+
+user=User.objects.create_user('111', password='userpassword')
+user.is_superuser=False
+user.is_staff=False
+user.save()
+
+for u in User.objects.all():
+    if u.is_authenticated:
+        print(u)
 '''
 
 admin = User.objects.get(username='vladislav')

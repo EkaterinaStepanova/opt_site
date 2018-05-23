@@ -25,6 +25,14 @@ urlpatterns = [
          views.UserCreate.as_view(),
          name=views.UserCreate.name
          ),
+    url(r'^sign-in/$',
+         views.UserLogin.as_view(),
+         name=views.UserLogin.name
+         ),
+    url(r'^login/$',
+         views.UserLogin.as_view(),
+         name=views.UserLogin.name
+         ),
     #
     # path('user/', include('django.contrib.auth.urls')),
     #url(r'^user/', include('django.contrib.auth.urls')),
