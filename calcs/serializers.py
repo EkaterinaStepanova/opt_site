@@ -10,6 +10,7 @@ class MeasureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Measure
         fields = ( 
+            'url'
             'name', 
 
             'bottom_border', 

@@ -42,7 +42,9 @@ class Measure(models.Model):
     owner = models.ForeignKey(
         User,
         related_name = 'measure',
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        null=True,
+        blank=True,
         )
 
     class Meta:

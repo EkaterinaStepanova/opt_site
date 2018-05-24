@@ -33,6 +33,8 @@ user.is_superuser=False
 user.is_staff=False
 user.save()
 
+User.objects.all().delete()
+
 user=User.objects.create_user('111', password='userpassword')
 user.is_superuser=False
 user.is_staff=False

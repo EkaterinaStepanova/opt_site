@@ -47,9 +47,9 @@ class UserCreate(generics.CreateAPIView):
     name = 'user-create'
     serializer_class = UserSerializer
 
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        return super(UserCreate, self).form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.created_by = self.request.user
+    #     return super(UserCreate, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -57,11 +57,11 @@ class UserCreate(generics.CreateAPIView):
 
         form = UserCreateForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.set_password(request.POST["password"])
             user.save()
             serializer = UserSerializer(user, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):
-                logout(request,user)
                 return redirect('/measure/', request=request)
         # !TODO Show error message!
         messages.error(request, str(form['username'].errors)+str(form['password'].errors))
@@ -81,9 +81,9 @@ class UserLogin(APIView):
     name = 'user-login'
     serializer_class = UserSerializer
 
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        return super(UserCreate, self).form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.created_by = self.request.user
+    #     return super(UserCreate, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -92,6 +92,7 @@ class UserLogin(APIView):
         form = UserLoginForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
+            print('UserLogin',user.password)
             user = authenticate(username=user.username, password=user.password)
             if user is not None:
                 login(request, user)
@@ -222,6 +223,9 @@ class MeasureCreate(generics.CreateAPIView):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class ApiRoot(generics.GenericAPIView):
