@@ -43,6 +43,8 @@ user.save()
 for u in User.objects.all():
     if u.is_authenticated:
         print(u)
+
+Measure.objects.get(pk=2)
 '''
 
 admin = User.objects.get(username='vladislav')

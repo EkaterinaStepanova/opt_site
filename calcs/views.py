@@ -38,6 +38,9 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
+#permissions
+from calcs.permissions import IsOwnerOrStaff
+
 
 class UserCreate(generics.CreateAPIView):
     model = User
@@ -92,7 +95,6 @@ class UserLogin(APIView):
         form = UserLoginForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            print('UserLogin',user.password)
             user = authenticate(username=user.username, password=user.password)
             if user is not None:
                 login(request, user)
@@ -146,6 +148,10 @@ class MeasureList(generics.ListAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
     name = 'measure-list'
+
+    permission_classes = (
+        IsOwnerOrStaff,
+        )
     
 
     #filter_class = MeasureListFilter
@@ -172,9 +178,6 @@ class MeasureList(generics.ListAPIView):
         measures = paginator.get_page(page)
         return render(request, self.template_name, {'measures': measures})
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
 
 class MeasureDetail(generics.RetrieveAPIView):
     queryset = Measure.objects.all()
@@ -183,6 +186,11 @@ class MeasureDetail(generics.RetrieveAPIView):
 
     renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer)
     template_name = 'calcs/measure_detail.html'
+
+    permission_classes = (
+        IsOwnerOrStaff,   
+        permissions.IsAuthenticated,  
+        )
 
     def get_object(self, pk):
         try:
@@ -209,13 +217,13 @@ class MeasureCreate(generics.CreateAPIView):
         form = MeasureForm(request.POST)
         if form.is_valid():
             measure = form.save()
+            measure.owner=self.request.user
             measure.save()
             serializer = MeasureSerializer(measure, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):
                 #celery!!!
                 minimize_result = minimize(measure)
                 minimize_result.save()
-                print(measure.get_method())
                 return redirect('/measure/', request=request)
         # !TODO Show error message!
         messages.error(request, str(form['function'].errors))

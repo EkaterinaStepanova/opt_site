@@ -7,6 +7,7 @@ import pylab
 from matplotlib import mlab
 import os
 from py_expression_eval import Parser
+import numpy as np
 
 def f_(x):
     #return 10 + x*x - 10*cos(2*pi*x)
@@ -93,8 +94,8 @@ def global_search(measure):
         #drawing
         xmin = a
         xmax = b
-        dx = (float)(xmax-xmin)/300
-        xlist = mlab.frange (xmin, xmax, dx)
+        dx = (float)(xmax-xmin)/200
+        xlist = np.arange(xmin, xmax, dx)
         ylist1 = [f(x) for x in xlist]
         fig = pylab.figure(0)
         pylab.subplot()
@@ -194,8 +195,8 @@ def piyavsky(measure):
         #drawing
         xmin = a
         xmax = b
-        dx = (float)(xmax-xmin)/300
-        xlist = mlab.frange (xmin, xmax, dx)
+        dx = (float)(xmax-xmin)/200
+        xlist = np.arange(xmin, xmax, dx)
         ylist = [f(x) for x in xlist]
         fig = pylab.figure(1)
         pylab.subplot()

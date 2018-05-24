@@ -48,7 +48,7 @@ class Measure(models.Model):
         )
 
     class Meta:
-        ordering = ('date',)
+        ordering = ('-date',)
 
     def get_method(self):
         if self.method in self.METHOD_CHOICES[0]:

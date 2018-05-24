@@ -10,7 +10,7 @@ class MeasureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Measure
         fields = ( 
-            'url'
+            'url',
             'name', 
 
             'bottom_border', 
@@ -40,6 +40,7 @@ class UserMeasureSerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     measure = UserMeasureSerializer(many=True, read_only=True)
     #measure = serializers.SlugRelatedField(queryset=Measure.objects.all(), slug_field='measure')
+    #measure = MeasureSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
