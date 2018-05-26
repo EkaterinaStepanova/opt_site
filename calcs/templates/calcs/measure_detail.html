@@ -3,7 +3,11 @@
 {% block content %}
     <div>
         <h3>Measure name: {{ measure.name }}</h3>
-        <p>Owner:  {{ measure.owner }}</p>  
+
+        {% if user.is_staff == True %}
+            <p>Owner:  {{ measure.owner }}</p>  
+        {% endif %}
+        
         <p>{{ measure.date|time:"G:i"}} {{ measure.date|date:"N j, o"}}</p>
         <p>Method:  {{ measure.method }}</p>     
         <p>Function:  {{ measure.function }}</p>       

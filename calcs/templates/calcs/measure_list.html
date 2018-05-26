@@ -9,9 +9,11 @@
                 <a href="?page={{ measures.previous_page_number }}">previous</a>
             {% endif %}
 
+            {% if measures.number %}
             <span class="current">
                 Page {{ measures.number }} of {{ measures.paginator.num_pages }}.
             </span>
+            {% endif %}
 
             {% if measures.has_next %}
                 <a href="?page={{ measures.next_page_number }}">next</a>

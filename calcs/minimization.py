@@ -107,6 +107,7 @@ def global_search(measure):
 
         filename = str(uuid.uuid1())+'.jpg'
         fig.savefig('media/'+filename)
+        fig.clear()
         measure.graph_image_filename = filename
 
     except Exception as exc:
@@ -207,6 +208,7 @@ def piyavsky(measure):
 
         filename = str(uuid.uuid1())+'.jpg'
         fig.savefig('media/'+filename)
+        fig.clear()
         measure.graph_image_filename = filename
 
     except Exception as exc:

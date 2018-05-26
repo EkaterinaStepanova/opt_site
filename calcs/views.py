@@ -1,26 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+
 # Create your views here.
 
 from calcs.models import Measure
 from calcs.serializers import MeasureSerializer, UserSerializer
 
-from rest_framework import generics
+from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-
-
-from rest_framework import permissions
+from rest_framework.renderers import TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer
 from rest_framework.throttling import ScopedRateThrottle
-from rest_framework import filters
-from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter
 
+from django_filters import NumberFilter, DateTimeFilter, AllValuesFilter
 from django_filters.rest_framework import FilterSet 
 
-from rest_framework.renderers import TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer
-from rest_framework.response import Response
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 
 #reg form
 from django.views.generic.edit import CreateView
@@ -41,6 +36,8 @@ from django.contrib.auth import authenticate, login, logout
 #permissions
 from calcs.permissions import IsOwnerOrStaff
 
+
+# !TODO /welcome/ page 
 
 class UserCreate(generics.CreateAPIView):
     model = User
@@ -144,15 +141,10 @@ class MeasureListFilter(FilterSet):
             )
 
 
-class MeasureList(generics.ListAPIView):
-    queryset = Measure.objects.all()
+class MeasureList(generics.ListAPIView):  
     serializer_class = MeasureSerializer
     name = 'measure-list'
-
-    permission_classes = (
-        IsOwnerOrStaff,
-        )
-    
+    queryset = Measure.objects.all()
 
     #filter_class = MeasureListFilter
     filter_fields = (
@@ -173,6 +165,15 @@ class MeasureList(generics.ListAPIView):
     template_name = 'calcs/measure_list.html' 
 
     def list(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/', request=request)
+        if request.user.is_staff:
+            print('is_staff')
+            self.queryset = Measure.objects.all()
+        else:
+            print(str(request.user))
+            self.queryset = Measure.objects.all().filter(owner=str(request.user))
+            print(self.queryset)
         paginator = Paginator(self.queryset, settings.REST_FRAMEWORK['PAGE_SIZE']) # Show 25 contacts per page
         page = request.GET.get('page')
         measures = paginator.get_page(page)
@@ -187,10 +188,10 @@ class MeasureDetail(generics.RetrieveAPIView):
     renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer, JSONRenderer)
     template_name = 'calcs/measure_detail.html'
 
-    permission_classes = (
-        IsOwnerOrStaff,   
-        permissions.IsAuthenticated,  
-        )
+    # permission_classes = (
+    #     IsOwnerOrStaff,   
+    #     permissions.IsAuthenticated,  
+    #     )
 
     def get_object(self, pk):
         try:
@@ -198,13 +199,14 @@ class MeasureDetail(generics.RetrieveAPIView):
         except Measure.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, format=None):      
         measure = self.get_object(pk)
+        if not (measure.owner == request.user or request.user.is_staff):
+            return redirect('/measure/', request=request)
         serializer = MeasureSerializer(measure)
         return Response({ 'serializer': serializer, 'measure': measure })
 
 
-from django.shortcuts import redirect 
 class MeasureCreate(generics.CreateAPIView):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
@@ -238,10 +240,19 @@ class MeasureCreate(generics.CreateAPIView):
 
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
+    renderer_classes = (TemplateHTMLRenderer, BrowsableAPIRenderer)
+    template_name = 'calcs/welcome.html'
+
     def get(self, request, *args, **kwargs):
-        return Response({
+        if not request.user.is_authenticated:
+            return Response({
             'measure': reverse(MeasureList.name, request=request),
-            #'user': reverse(UserCreate.name, request=request),
-            })
+            'user': reverse(UserCreate.name, request=request),
+            })  
+        else:
+             return Response({
+            'measure': reverse(MeasureList.name, request=request),
+            })  
+        
 
 
