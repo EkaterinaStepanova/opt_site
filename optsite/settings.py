@@ -151,3 +151,13 @@ REST_FRAMEWORK = {
         'measures': '100/hour',
     }
 }
+
+CELERY_BROKER_URL = 'amqp://localhost'
+
+CELERY_ACKS_LATE = True
+CELERYD_PREFETCH_MULTIPLIER = 1
+CELERYD_CONCURRENCY = 1
+
+#celery -A optsite worker --pool=eventlet -l info -Ofair
+#celery -A optsite purge -f
+#celery -A optsite worker -P gevent -l info -Ofair

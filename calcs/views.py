@@ -24,7 +24,8 @@ from django.contrib import messages
 from django.conf import settings
 
 #minimization
-from calcs.minimization import minimize
+#from calcs.minimization import minimize
+from calcs.tasks import minimize
 
 #pagination
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -35,6 +36,8 @@ from django.contrib.auth import authenticate, login, logout
 
 #permissions
 from calcs.permissions import IsOwnerOrStaff
+
+
 
 
 # !TODO /welcome/ page 
@@ -171,8 +174,8 @@ class MeasureList(generics.ListAPIView):
             print('is_staff')
             self.queryset = Measure.objects.all()
         else:
-            print(str(request.user))
-            self.queryset = Measure.objects.all().filter(owner=str(request.user))
+            print(request.user)
+            self.queryset = Measure.objects.all().filter(owner=request.user)
             print(self.queryset)
         paginator = Paginator(self.queryset, settings.REST_FRAMEWORK['PAGE_SIZE']) # Show 25 contacts per page
         page = request.GET.get('page')
@@ -224,8 +227,8 @@ class MeasureCreate(generics.CreateAPIView):
             serializer = MeasureSerializer(measure, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):
                 #celery!!!
-                minimize_result = minimize(measure)
-                minimize_result.save()
+                minimize_result = minimize.delay(measure.id)
+                #minimize_result = minimize.apply_async(args=(measure.id,))
                 return redirect('/measure/', request=request)
         # !TODO Show error message!
         messages.error(request, str(form['function'].errors))
