@@ -1,1 +1,1 @@
-web: gunicorn optsite.wsgi --log-file -
+web: gunicorn optsite.wsgi
