@@ -104,3 +104,6 @@ venv.bak/
 .mypy_cache/
 
 /media
+
+# Heroku
+local_settings.py
