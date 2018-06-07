@@ -15,6 +15,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "optsite.settings")
 
 application = get_wsgi_application()
 
-# heroku
-from whitenoise.django import DjangoWhiteNoise
-application = DjangoWhiteNoise(application)
+# # heroku
+# from whitenoise.django import DjangoWhiteNoise
+# application = DjangoWhiteNoise(application)
