@@ -171,12 +171,12 @@ class MeasureList(generics.ListAPIView):
         if not request.user.is_authenticated:
             return redirect('/', request=request)
         if request.user.is_staff:
-            print('is_staff')
+            #print('is_staff')
             self.queryset = Measure.objects.all()
         else:
-            print(request.user)
+            #print(request.user)
             self.queryset = Measure.objects.all().filter(owner=request.user)
-            print(self.queryset)
+            #print(self.queryset)
         paginator = Paginator(self.queryset, settings.REST_FRAMEWORK['PAGE_SIZE']) # Show 25 contacts per page
         page = request.GET.get('page')
         measures = paginator.get_page(page)

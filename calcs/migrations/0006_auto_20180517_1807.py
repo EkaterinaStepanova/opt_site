@@ -22,6 +22,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='measure',
             name='method',
-            field=models.CharField(choices=[('GLOBAL_SEARCH', 'global_search'), ('PIYAVSKY', 'piyavsky')], default='GLOBAL_SEARCH', max_length=2),
+            field=models.CharField(choices=[('gs', 'global_search'), ('pi', 'piyavsky')], default='gs', max_length=2),
         ),
     ]
