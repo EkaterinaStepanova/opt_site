@@ -223,6 +223,7 @@ class MeasureCreate(generics.CreateAPIView):
         if form.is_valid():
             measure = form.save()
             measure.owner=self.request.user
+            measure.exit_reason = 'Can not connect to Celery'
             measure.save()
             serializer = MeasureSerializer(measure, data=request.data, context={'request': request})
             if serializer.is_valid(raise_exception=True):

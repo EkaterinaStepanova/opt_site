@@ -30,10 +30,10 @@
 
 {% load rest_framework %}
 {% block content %}
-    <form action="" method="post">
+    <form class="input_form" action="" method="post">
         {% csrf_token %}
-        Name  <input type="text" name="name" value="Grishagin"><br>
-        Method <select  name="method">
+        Name  <input type="text" name="name" value="Grishagin"></input><br>
+        Method <select name="method">
                 <option value="global_search">global_search</option>
                 <option value="piyavsky">piyavsky</option>
         </select><br>
@@ -48,12 +48,13 @@
                 {% else %}           
                     <br>
                 {% endif %}
-        Bottom border  <input type="number" step=any name="bottom_border" value="0.2"><br>
-        Upper border  <input type="number" step=any name="upper_border" value="3.2"><br>
-        R  <input type="number" step=any name="r" value="2.4"><br>
-        Epsilon  <input type="number" step=any name="epsilon" value="0.01"><br>
+            </input>
+        Bottom border  <input type="number" step=any name="bottom_border" value="0.2"></input><br>
+        Upper border  <input type="number" step=any name="upper_border" value="3.2"></input><br>
+        R  <input type="number" step=any name="r" value="2.4"></input><br>
+        Epsilon  <input type="number" step=any name="epsilon" value="0.01"></input><br>
 
-        <input type="submit" value="Save">
+        <input type="submit" value="Save" style="width: 5em;">
     </form>
 
 {% endblock %}

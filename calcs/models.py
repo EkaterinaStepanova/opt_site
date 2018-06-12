@@ -16,15 +16,12 @@ class Measure(models.Model):
     function_minimum  = models.FloatField(default=0)
     arg_minimum       = models.FloatField(default=0)
 
-    # когда в последний раз измеряли
     date = models.DateTimeField(auto_now_add=True)
-    # название эксперимента. 
     name = models.CharField(max_length=200)
-    # нашелся ли минимум
     result_exist = models.BooleanField(default=False)
-    # добавить причину, если не нашелся
+    # if we get error in calculations
     exit_reason = models.CharField(max_length=200, default='default')
-    # имя графика
+    # path to image
     graph_image_filename = models.CharField(max_length=200,  default='')
 
     GLOBAL_SEARCH = 'global_search'

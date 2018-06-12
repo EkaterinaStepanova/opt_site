@@ -11,16 +11,16 @@
         <p>{{ measure.date|time:"G:i"}} {{ measure.date|date:"N j, o"}}</p>
         <p>Method:  {{ measure.method }}</p>     
         <p>Function:  {{ measure.function }}</p>       
-        <p>[{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
+        <p>Interval [{{ measure.bottom_border }} ; {{ measure.upper_border }}]</p>
         <br>
         <p>R = {{ measure.r }}</p>
         <p>Eps = {{ measure.epsilon }}</p>
         <br>
         {% if measure.result_exist == True %}
             <p>Result:</p>
-            <p>iterations_number = {{ measure.iterations_number }}</p>
-            <p>function_minimum = {{ measure.function_minimum }}</p>
-            <p>arg_minimum = {{ measure.arg_minimum }}</p>      
+            <p>Iterations number = {{ measure.iterations_number }}</p>
+            <p>Function minimum = {{ measure.function_minimum }}</p>
+            <p>Arg minimum = {{ measure.arg_minimum }}</p>      
             <br><img src="media/{{measure.graph_image_filename}}" alt="Graph">
         {% else %}
             <p>Error in calculations: {{ measure.exit_reason }}</p>
