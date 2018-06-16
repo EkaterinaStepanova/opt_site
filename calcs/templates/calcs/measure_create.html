@@ -1,0 +1,60 @@
+{% extends 'calcs/base.html' %}
+<!-- <div>
+    <h1><a href="/">Title</a></h1>
+</div>
+
+{% load rest_framework %}
+
+<html><body>
+
+<h1>Measure - {{ measure.name }}</h1>
+<h1>Measure - {{ measure.pk }}</h1>
+<h1>Measure - {{ measure.data }}</h1>
+
+<form action="{% url 'measure-create' %}" method="POST">
+    {% csrf_token %}
+    <input id="your_name" type="text" name="measure.name" value="{{ measure.name }}">
+    <input type="submit" value="Save">
+</form>
+
+</body></html>
+
+<form method="get">
+    Name  <input type="text" name="name"><br>
+    Bottom border  <input type="number" name="bottom_border"><br>
+    Upper border  <input type="number" name="upper_border"><br>
+    R  <input type="number" name="r"><br>
+    Epsilon  <input type="number" name="epsilon"><br>
+    <input type="submit" value="Save">
+</form>  -->
+
+{% load rest_framework %}
+{% block content %}
+    <form class="input_form" action="" method="post">
+        {% csrf_token %}
+        Name  <input type="text" name="name" value="Grishagin"></input><br>
+        Method <select name="method">
+                <option value="global_search">global_search</option>
+                <option value="piyavsky">piyavsky</option>
+        </select><br>
+
+            Function  <input type="text" name="function" value="1 + x*x - cos(18*x*x)">           
+                {% if messages %}
+                <div class="errs" style="color: #ff0000;">
+                    {% for message in messages %}
+                        {{message}} 
+                    {% endfor %}
+                </div>
+                {% else %}           
+                    <br>
+                {% endif %}
+            </input>
+        Bottom border  <input type="number" step=any name="bottom_border" value="0.2"></input><br>
+        Upper border  <input type="number" step=any name="upper_border" value="3.2"></input><br>
+        R  <input type="number" step=any name="r" value="2.4"></input><br>
+        Epsilon  <input type="number" step=any name="epsilon" value="0.01"></input><br>
+
+        <input type="submit" value="Save" style="width: 5em;">
+    </form>
+
+{% endblock %}
